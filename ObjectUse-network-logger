@@ -1,0 +1,44 @@
+// Object type declaration
+
+type networkLoadingState = {
+    state: "loading"
+};
+
+type networkSuccessState = {
+    state: "success",
+    response: {
+        title: string,
+        duration: number,
+        summary: string,
+    }
+};
+
+type networkFailedState = {
+    state: "failed",
+    code: number
+}
+
+// Object Unions
+type networkStatus = 
+networkFailedState |
+networkLoadingState |
+networkSuccessState;
+
+//Object discriminations
+function networkLogger (state: networkStatus){
+    switch(state.state){
+        case "loading":
+            return "Loading";
+        case "failed":
+            return `Could not connect to network. returned with failed code ${state.code}`;
+        case "success":
+            return `Success!\n Title: ${state.response.title}\n Duration: ${state.response.duration}\n Summary: ${state.response.summary}`;
+    }
+}
+
+console.log(networkLogger({state: "loading"}));
+
+console.log(networkLogger({state: "failed", code: 404}));
+
+console.log(networkLogger({state: "success", 
+response: { title: "Data loaded", duration: 60, summary: "Data loaded successfully" }}));
